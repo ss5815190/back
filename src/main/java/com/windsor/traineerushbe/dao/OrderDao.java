@@ -25,7 +25,7 @@ public class OrderDao {
     }
 
 
-    public Integer countOrder(OrderQueryParams orderQueryParams) {
+    public Integer countOrder() {
         String sql = "SELECT count(*) FROM `order`";
 
         return namedParameterJdbcTemplate.queryForObject(sql, new HashMap<>(), Integer.class);

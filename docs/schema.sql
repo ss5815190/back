@@ -36,6 +36,5 @@ CREATE TABLE `order_item` (
   `quantity` int NOT NULL,
   `price` int NOT NULL,
   `item_total_price` int NOT NULL,
-  PRIMARY KEY (`order_item_id`),
-  UNIQUE KEY `order_item_key` (`order_item_key`)
+  PRIMARY KEY (`order_item_id`)
 );
