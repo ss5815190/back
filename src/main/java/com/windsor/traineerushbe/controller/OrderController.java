@@ -5,15 +5,23 @@ import com.windsor.traineerushbe.model.Order;
 import com.windsor.traineerushbe.service.OrderService;
 import com.windsor.traineerushbe.util.Page;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Validated
@@ -80,5 +88,27 @@ public class OrderController {
         Order response = orderService.getOrderById(orderId);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @GetMapping(value = "/order/{orderId}/print")
+    public ResponseEntity<Resource> orderPrint(
+            @Parameter(description = "點單號")
+            @PathVariable Integer orderId){
+
+        String fileName = orderService.orderPrint(orderId);
+        Path path = Paths.get(fileName);
+        String contentType = "application/csv; charset=utf-8";
+        org.springframework.core.io.Resource resource = null;
+        try {
+            System.out.println("[Get Order print file uri:{}]" + path.toUri());
+            resource = new UrlResource(path.toUri());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        assert resource != null;
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                .body(resource);
     }
 }
