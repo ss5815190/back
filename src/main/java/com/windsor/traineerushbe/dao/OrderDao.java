@@ -1,5 +1,6 @@
 package com.windsor.traineerushbe.dao;
 
+import com.windsor.traineerushbe.dto.OrderItemRequest;
 import com.windsor.traineerushbe.dto.OrderQueryParams;
 import com.windsor.traineerushbe.model.Order;
 import com.windsor.traineerushbe.model.OrderItem;
@@ -94,26 +95,26 @@ public class OrderDao {
     }
 
 
-    public void createOrderItems(Integer orderId, List<OrderItem> orderItemList) {
+    public void createOrderItems(Integer orderId, List<OrderItemRequest> orderItemRequestList) {
         String sql = "INSERT INTO order_item(order_item_key, order_id, product_name, ice, sweetness, quantity, price, item_total_price) " +
                 "VALUES (:order_item_key, :order_id, :product_name, :ice, :sweetness, :quantity, :price, :item_total_price)";
 
         // 使用batchUpdate 一次加入數據，效率較高
 
-        MapSqlParameterSource[] parameterSources = new MapSqlParameterSource[orderItemList.size()];
+        MapSqlParameterSource[] parameterSources = new MapSqlParameterSource[orderItemRequestList.size()];
 
-        for (int i = 0; i < orderItemList.size(); i++) {
-            OrderItem orderItem = orderItemList.get(i);
+        for (int i = 0; i < orderItemRequestList.size(); i++) {
+            OrderItemRequest orderItemRequest = orderItemRequestList.get(i);
 
             parameterSources[i] = new MapSqlParameterSource();
-            parameterSources[i].addValue("order_item_key", orderItem.getOrderItemKey());
+            parameterSources[i].addValue("order_item_key", orderItemRequest.getOrderItemKey());
             parameterSources[i].addValue("order_id", orderId);
-            parameterSources[i].addValue("product_name", orderItem.getProductName());
-            parameterSources[i].addValue("ice", orderItem.getIce());
-            parameterSources[i].addValue("sweetness", orderItem.getSweetness());
-            parameterSources[i].addValue("quantity", orderItem.getQuantity());
-            parameterSources[i].addValue("price", orderItem.getPrice());
-            parameterSources[i].addValue("item_total_price", orderItem.getItemTotalPrice());
+            parameterSources[i].addValue("product_name", orderItemRequest.getProductName());
+            parameterSources[i].addValue("ice", orderItemRequest.getIce());
+            parameterSources[i].addValue("sweetness", orderItemRequest.getSweetness());
+            parameterSources[i].addValue("quantity", orderItemRequest.getQuantity());
+            parameterSources[i].addValue("price", orderItemRequest.getPrice());
+            parameterSources[i].addValue("item_total_price", orderItemRequest.getItemTotalPrice());
         }
 
         namedParameterJdbcTemplate.batchUpdate(sql, parameterSources);

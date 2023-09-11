@@ -1,5 +1,6 @@
 package com.windsor.traineerushbe.dao;
 
+import com.windsor.traineerushbe.dto.UserRequest;
 import com.windsor.traineerushbe.model.User;
 import com.windsor.traineerushbe.rowmapper.UserRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -21,13 +22,13 @@ public class UserDao {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
-    public Integer createUser(User user) {
+    public Integer createUser(UserRequest userRequest) {
         String sql = "INSERT INTO user(name, phone, address) VALUES (:name, :phone, :address)";
 
         Map<String, Object> map = new HashMap<>();
-        map.put("name", user.getName());
-        map.put("phone", user.getPhone());
-        map.put("address", user.getAddress());
+        map.put("name", userRequest.getName());
+        map.put("phone", userRequest.getPhone());
+        map.put("address", userRequest.getAddress());
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 

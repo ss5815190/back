@@ -75,7 +75,7 @@ public class OrderController {
     @PostMapping
     public ResponseEntity<Order> createOrder(@RequestBody OrderRequest orderRequest) {
 
-        Integer userId = orderService.createUser(orderRequest.getUser());
+        Integer userId = orderService.createUser(orderRequest.getUserRequest());
 
         Integer orderId = orderService.createOrder(userId,orderRequest);
 
