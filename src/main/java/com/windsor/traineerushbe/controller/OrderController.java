@@ -1,6 +1,7 @@
 package com.windsor.traineerushbe.controller;
 
 import com.windsor.traineerushbe.dto.OrderQueryParams;
+import com.windsor.traineerushbe.dto.OrderRequest;
 import com.windsor.traineerushbe.model.Order;
 import com.windsor.traineerushbe.service.OrderService;
 import com.windsor.traineerushbe.util.Page;
@@ -21,7 +22,6 @@ import java.util.List;
 @RequestMapping("/orders")
 @Tag(name = "Order")
 public class OrderController {
-
 
     private final OrderService orderService;
 
@@ -51,7 +51,7 @@ public class OrderController {
         List<Order> orderList = orderService.getOrders(orderQueryParams);
 
         // 取得 order 總數
-        Integer count = orderService.countOrder(orderQueryParams);
+        Integer count = orderService.countOrder();
 
         // 分頁
         Page<Order> page = new Page<>();
@@ -73,9 +73,11 @@ public class OrderController {
             }
     )
     @PostMapping
-    public ResponseEntity<Order> createOrder(@RequestBody Order order) {
+    public ResponseEntity<Order> createOrder(@RequestBody OrderRequest orderRequest) {
 
-        Integer orderId = orderService.createOrder(order);
+        Integer userId = orderService.createUser(orderRequest.getUser());
+
+        Integer orderId = orderService.createOrder(userId,orderRequest);
 
         Order response = orderService.getOrderById(orderId);
 
